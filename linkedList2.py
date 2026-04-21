@@ -4,85 +4,70 @@ class Node:
         self.next = None
 
 
-class LinkedList:
+class LinkedList2:
     def __init__(self, value):
         new_node = Node(value)
         self.head = new_node
         self.tail = new_node
         self.length = 1
 
-
-    def print_list(self):
+    def print(self):
         temp = self.head
         while temp is not None:
             print(temp.value)
             temp = temp.next
 
 
+
     def append(self, value):
         new_node = Node(value)
-
-        if self.length == 0:
-            self.head = new_node
-            self.tail = new_node
-        else:      
-            self.tail.next = new_node
-            self.tail = new_node
-
+        self.tail.next = new_node
+        self.tail = new_node
         self.length += 1
         return True
     
-
     def prepend(self, value):
         new_node = Node(value)
-
-        if self.length == 0:
-            self.head = new_node
-            self.tail = new_node
-        else:
-            new_node.next = self.head
-            self.head = new_node
-
+        temp = self.head
+        self.head = new_node
+        self.head.next = temp
         self.length += 1
         return True
     
-
     def pop(self):
         if self.length == 0:
             return None
         
-        temp = self.head
-        pre = self.head
+        prev = self.head
+        temp = prev
         while temp.next is not None:
-            pre = temp
+            prev = temp
             temp = temp.next
 
-        self.tail = pre
-        self.tail.next = None
+        prev.next = None
+        self.tail = prev
         self.length -= 1
 
         if self.length == 0:
             self.head = None
             self.tail = None
 
-        return temp
-
-
+        return temp.value
+    
     def pop_first(self):
         if self.length == 0:
             return None
         
         temp = self.head
         self.head = temp.next
-        temp.next = None
         self.length -= 1
 
         if self.length == 0:
+            self.head = None
             self.tail = None
 
-        return temp
-
-
+        return temp.value
+    
     def get(self, index):
         if index < 0 or index >= self.length:
             return None
@@ -90,37 +75,34 @@ class LinkedList:
         temp = self.head
         for _ in range(index):
             temp = temp.next
+
         return temp
     
-
     def set_value(self, index, value):
         temp = self.get(index)
-
-        if temp is not None:
+        
+        if temp:
             temp.value = value
             return True
         return False
     
-
     def insert(self, index, value):
         if index < 0 or index > self.length:
             return False
         
         if index == 0:
-            return self.prepend(value)
+          return self.prepend(value)
         
         if index == self.length:
             return self.append(value)
         
+        temp = self.get(index - 1)
         new_node = Node(value)
-
-        temp = self.get(index-1)
         new_node.next = temp.next
         temp.next = new_node
         self.length += 1
         return True
     
-
     def remove(self, index):
         if index < 0 or index >= self.length:
             return None
@@ -128,90 +110,37 @@ class LinkedList:
         if index == 0:
             return self.pop_first()
         
-        if index == self.length - 1:
+        if index == self.length-1:
             return self.pop()
         
-        pre = self.get(index-1)
-        temp = pre.next        
-        pre.next = temp.next
+        prev = self.get(index-1)
+        temp = prev.next
+        prev.next = temp.next
         temp.next = None
         self.length -= 1
-
         return temp
     
     def reverse(self):
+        
         temp = self.head
         self.head = self.tail
         self.tail = temp
         after = temp.next
         before = None
-
+        
         for _ in range(self.length):
             after = temp.next
             temp.next = before
             before = temp
             temp = after
-        
-    def find_the_middle_node(self):
-        if self.length == 0:
-            return None
-        slow = self.head
-        fast = self.head
-
-        while fast is not None and fast.next is not None:
-            slow = slow.next
-            fast = fast.next.next
-        return slow
-    
-    def check_has_loop(self):
-        self.tail.next = self.head
-
-        slow = self.head
-        fast = self.head
-
-        while fast and fast.next:
             
-            slow = slow.next
-            fast = fast.next.next
-            if slow == fast:
-                return True
-
-        return False
 
 
 
-node = LinkedList(0)
-# print(node.head)
-# print(node.head.value)
-# print(node.head.next)
-# print(node.head.value)
-# print(node.tail.next)
+link = LinkedList2(1)
+link.prepend(0)
+link.append(2)
+link.print()
+link.insert(0, 6)
+link.print()
 
-node.append(1)
-node.append(2)
-node.append(3)
-node.append(4)
-node.append(5)
-# node.append(6)
-# print('\n')
-# print(node.head.value)
-# print(node.head.next.value)
-# print(node.tail.value)
-# print(node.tail.next)
-print(node.get(1).value)
-print('\n')
-node.print_list()
-# print(node.insert(2,3))
-
-
-# node.print_list()
-# print('\n')
-
-# print(node.remove(1).value)
-# print('\n')
-# node.print_list()
-# print('\n')
-
-print('\n')
-print(node.find_the_middle_node().value)
-print(node.check_has_loop())
